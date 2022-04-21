@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Param, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { CreateSuitesDto } from './dto/create-suites.dto';
@@ -35,19 +35,24 @@ export class SuitesController {
         },
     }),
     fileFilter : (req,file,cb) => {
-        if(!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)){
-            return cb(null,false)
+            if(!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)){
+                return cb(null,false)
+            }
+            cb(null,true)
         }
-        cb(null,true)
+    }))
+    async createSuite(@Body() suitesDto:CreateSuitesDto,@UploadedFile() image : Express.Multer.File):Promise<Suites>{
+        if(!image){
+            throw new BadRequestException("Image dosn't exist")
+        }
+        const suite = await this.suitesServices.createSuite(suitesDto,image)
+        return suite;
     }
-}))
-async createSuite(@Body() suitesDto:CreateSuitesDto,@UploadedFile() image : Express.Multer.File):Promise<Suites>{
-    if(!image){
-        throw new BadRequestException("Image dosn't exist")
+
+    @Get('pictures/:filepath')
+    async getPhoto(@Param('filepath') image,@Res() res){
+        return res.sendFile(image,{root : './files'})
     }
-    const suite = await this.suitesServices.createSuite(suitesDto,image)
-    return suite;
-}
 
     
 

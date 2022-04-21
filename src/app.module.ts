@@ -4,6 +4,7 @@ import { typeOrmConfig } from './config/typeorm.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SuitesModule } from './suites/suites.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -11,7 +12,8 @@ import { MulterModule } from '@nestjs/platform-express';
     SuitesModule,
     MulterModule.register({
     dest : './file'
-  })],
+  }),
+    AuthModule],
   providers: [AppService],
 })
 export class AppModule {}
