@@ -21,17 +21,16 @@ export class SuitesServices {
         return this.suitesRepository.findOne(id)
     }
 
-    async createSuite(suitesDto: CreateSuitesDto,file: any):Promise<Suites>{
+    async createSuite(suitesDto: CreateSuitesDto,ranking : SuitesRanking,file: any):Promise<Suites>{
         const suites = new Suites()
         suites.name = suitesDto.name
         suites.price = suitesDto.price
-        suites.ranking = SuitesRanking.ECONOMIC
+        suites.ranking = ranking
         suites.image = file ? file.filename : ''
 
         const create = this.suitesRepository.create(suites)
         await this.suitesRepository.save(suites)
         return create;
-
     }
 
     

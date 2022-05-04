@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty } from "class-validator";
+import { IsInt, IsNotEmpty, IsString } from "class-validator";
 import { SuitesRanking } from "../suites.ranking.enum";
 
 export class CreateSuitesDto {
@@ -6,13 +6,15 @@ export class CreateSuitesDto {
     name: string;
 
     @IsNotEmpty()
-    @IsInt()
+    // @IsInt()
     price : number;
 
-    @IsNotEmpty()
-    ranking : SuitesRanking;
+    // @IsNotEmpty()
+    // @IsString()
+    // ranking : SuitesRanking;
 
-    @IsNotEmpty()
+    // @IsNotEmpty()
+    // @IsString()
     image : string;
 
 }

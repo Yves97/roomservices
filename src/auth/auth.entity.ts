@@ -1,5 +1,7 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 import * as bcrypt from 'bcrypt';
+import { Suites } from "src/suites/suites.entity";
+import { Reservations } from "src/reservations/reservations.entity";
 @Entity()
 @Unique(['email','phone'])
 export class Auth extends BaseEntity{
@@ -20,12 +22,14 @@ export class Auth extends BaseEntity{
 
     @Column()
     salt : string;
-    
+
+    // @ManyToMany(() => Suites)
+    // @JoinTable()
+    // suites : Suites[]
+
     async validatePassword(password:string):Promise<boolean>{
-        const hash = await bcrypt.hash(password,this.salt)
-        console.log('hash=',hash)
-        console.log('password=',this.password)
-        return hash === this.password
+        const isPasswordMatched = await bcrypt.compare(password,this.password)
+        return isPasswordMatched;
     }
 
 }

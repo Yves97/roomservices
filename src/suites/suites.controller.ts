@@ -1,8 +1,10 @@
-import { BadRequestException, Body, Controller, Get, Param, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Param, Post, Res, UploadedFile, UseInterceptors, ValidationPipe } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { ReservationSuitesRankingValidationPipe } from 'src/reservations/pipes/reservations-suites-ranking-validation.pipe';
 import { CreateSuitesDto } from './dto/create-suites.dto';
 import { Suites } from './suites.entity';
+import { SuitesRanking } from './suites.ranking.enum';
 import { SuitesServices } from './suites.services';
 
 @Controller('suites')
@@ -41,11 +43,11 @@ export class SuitesController {
             cb(null,true)
         }
     }))
-    async createSuite(@Body() suitesDto:CreateSuitesDto,@UploadedFile() image : Express.Multer.File):Promise<Suites>{
+    async createSuite(@Body(ValidationPipe) suitesDto:CreateSuitesDto,@Body('ranking',ReservationSuitesRankingValidationPipe) ranking : SuitesRanking, @UploadedFile() image : Express.Multer.File):Promise<Suites>{
         if(!image){
-            throw new BadRequestException("Image dosn't exist")
+            throw new BadRequestException("Veuillez choisir une image")
         }
-        const suite = await this.suitesServices.createSuite(suitesDto,image)
+        const suite = await this.suitesServices.createSuite(suitesDto,ranking,image)
         return suite;
     }
 

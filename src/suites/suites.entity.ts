@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToMany, JoinColumn } from 'typeorm';
 import { SuitesRanking } from './suites.ranking.enum';
-
+import { Auth } from 'src/auth/auth.entity';
+import { Reservations } from 'src/reservations/reservations.entity';
 
 @Entity()
 export class Suites extends BaseEntity {
@@ -20,4 +21,6 @@ export class Suites extends BaseEntity {
     @Column()
     image : string;
 
+    // @OneToMany(() => Reservations,(reservations)=> reservations.id)
+    // public reservations : Reservations
 }

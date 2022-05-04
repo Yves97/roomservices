@@ -9,13 +9,15 @@ import { JwtPayload } from "./jwt-payload.interface";
 import { UpdatePayload } from "./update-payload.interface";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UpdatePasswordDto } from "./dto/update-password.dto";
+import { MailService } from "src/mail/mail.service";
 
 @Injectable()
 export class AuthServices {
     constructor(
         @InjectRepository(AuthRepository)
         private authRepository : AuthRepository,
-        private jwtService : JwtService
+        private jwtService : JwtService,
+        private mailService : MailService
     ){}
 
     async createUser(user : CreateUserDto):Promise<void>{
@@ -30,7 +32,7 @@ export class AuthServices {
         
         try{
             await this.authRepository.save(newUser)
-            // await this.mailServices.sendWelcome(user)
+            await this.mailService.userWelcome(newUser)
         }catch(e){
             if(e.code === 'ER_DUP_ENTRY'){
                 throw new ConflictException('Cet utilisateur existe deja')
@@ -86,23 +88,20 @@ export class AuthServices {
         const update = await this.authRepository.update(id,updatePayload)
     }
 
-    async updatePassword(id:number,credentials : UpdatePasswordDto){
-        const {currentPassword,newPassword} = credentials
-        const user = await this.authRepository.findOne(id)
-        if(!user) throw new NotFoundException('Utilisateur introuvable')
-        const isPasswordValid = await user.validatePassword(currentPassword)
-        console.log(isPasswordValid)
-        if(isPasswordValid){
-            const auth = new Auth()
-            // auth.salt = await bcrypt.genSalt()
-            const nPass = await bcrypt.hash(newPassword,user.salt)
-            const update = await this.authRepository.update(id,{password : nPass})
-            // console.log(update)
-            return update;
-        }else{
-            throw new UnauthorizedException("Mot de passe incorrecte")
-        }
-        // console.log(user)
+    // async updatePassword(user:Auth,credentials : UpdatePasswordDto){
+    //     const {currentPassword,newPassword} = credentials
+    //     const isPasswordValid = await user.validatePassword(currentPassword)
+    //     if(isPasswordValid){
+            
+    //         const salt = await bcrypt.genSalt()
+    //         const nPass = await bcrypt.hash(newPassword,salt)
+    //         console.log('nPass==',nPass)
+    //         const update = await this.authRepository.update(user.id,{password : nPass,salt})
+    //         return update;
+    //     }else{
+    //         throw new UnauthorizedException("Mot de passe incorrecte")
+    //     }
+    //     // console.log(user)
 
-    }
+    // }
 }
