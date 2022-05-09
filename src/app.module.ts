@@ -7,6 +7,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { AuthModule } from './auth/auth.module';
 import { ReservationsModule } from './reservations/reservations.module';
 import { MailModule } from './mail/mail.module';
+import { ContactModule } from './contact/contact.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { MailModule } from './mail/mail.module';
     dest : './file'
   }),
     AuthModule,
-    MailModule],
+    MailModule,
+    ContactModule],
   providers: [AppService],
 })
 export class AppModule {}
