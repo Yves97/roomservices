@@ -55,11 +55,4 @@ export class SuitesController {
     async getPhoto(@Param('filepath') image,@Res() res){
         return res.sendFile(image,{root : './files'})
     }
-
-    
-
-
-
-
-
 }

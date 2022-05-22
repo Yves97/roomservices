@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotFoundException, Param, Patch, Post,UseGuards,ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Patch, Post,UseGuards,ValidationPipe, Res } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { userInfo } from 'os';
 import { Auth } from './auth.entity';
@@ -15,7 +15,7 @@ export class AuthController {
 
     @Post('/register')
     async createUser(@Body(ValidationPipe) createUserDto : CreateUserDto):Promise<void>{
-        return await this.authServices.createUser(createUserDto)
+        const create = await this.authServices.createUser(createUserDto)
     }
 
     @Get('user/:id')

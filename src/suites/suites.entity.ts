@@ -12,6 +12,9 @@ export class Suites extends BaseEntity {
     @Column()
     name : string;
 
+    @Column("longtext")
+    description : string;
+
     @Column()
     price :number;
 

@@ -9,6 +9,9 @@ export class CreateSuitesDto {
     // @IsInt()
     price : number;
 
+    @IsNotEmpty()
+    description : string;
+
     // @IsNotEmpty()
     // @IsString()
     // ranking : SuitesRanking;
