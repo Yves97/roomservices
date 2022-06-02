@@ -1,4 +1,16 @@
-import { BadRequestException, Body, Controller, Get, Param, Post, Res, UploadedFile, UseInterceptors, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, 
+    Body, 
+    Controller, 
+    Get, 
+    Param, 
+    Post, 
+    Res, 
+    UploadedFile, 
+    UseInterceptors, 
+    ValidationPipe,
+    UseGuards,
+    SetMetadata
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { ReservationSuitesRankingValidationPipe } from 'src/reservations/pipes/reservations-suites-ranking-validation.pipe';
@@ -6,13 +18,19 @@ import { CreateSuitesDto } from './dto/create-suites.dto';
 import { Suites } from './suites.entity';
 import { SuitesRanking } from './suites.ranking.enum';
 import { SuitesServices } from './suites.services';
-
+import { AuthGuard } from '@nestjs/passport';
+import { AuthRole } from 'src/auth/auth.roles.enum';
+// import { Roles } from 'src/auth/roles.decorators';
+import { RolesGuard , Roles } from 'src/auth/roles.guards';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { Auth } from 'src/auth/auth.entity';
 @Controller('suites')
 export class SuitesController {
     constructor(private suitesServices : SuitesServices){}
 
 
     @Get()
+    
     async getSuites():Promise<Suites[]>{
         const suites = await this.suitesServices.getSuites()
         return suites;
@@ -25,6 +43,8 @@ export class SuitesController {
     }
 
    @Post()
+   @Roles(AuthRole.ADMIN)
+   @UseGuards(AuthGuard(), RolesGuard)
    @UseInterceptors(FileInterceptor('image',{
     storage : diskStorage({
         destination : './files',

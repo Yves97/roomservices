@@ -10,6 +10,7 @@ import { UpdatePayload } from "./update-payload.interface";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UpdatePasswordDto } from "./dto/update-password.dto";
 import { MailService } from "src/mail/mail.service";
+import { AuthRole } from "./auth.roles.enum";
 
 @Injectable()
 export class AuthServices {
@@ -20,19 +21,21 @@ export class AuthServices {
         private mailService : MailService
     ){}
 
-    async createUser(user : CreateUserDto):Promise<void>{
+    async createUser(user : CreateUserDto):Promise<Auth>{
         const newUser = new Auth()
-        const {name,email,phone,password} = user
+        const {name,email,phone,password,role} = user
         newUser.name = name
         newUser.email = email
         newUser.salt = await bcrypt.genSalt()
         newUser.password = await this.hashPassword(password,newUser.salt)
         newUser.phone = phone
+        newUser.role = role || AuthRole.CLIENT  
         const create = this.authRepository.create(newUser)
         
         try{
             await this.authRepository.save(newUser)
             await this.mailService.userWelcome(newUser)
+            return create;
         }catch(e){
             if(e.code === 'ER_DUP_ENTRY'){
                 throw new ConflictException('Cet utilisateur existe deja')
@@ -68,7 +71,8 @@ export class AuthServices {
             id : user.id,
             name : user.name,
             email : user.email,
-            phone : user.phone
+            phone : user.phone,
+            role : user.role
         }
         const accessToken = await this.jwtService.sign(payload)
 

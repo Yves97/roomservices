@@ -1,7 +1,7 @@
-import { BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
 import * as bcrypt from 'bcrypt';
-import { Suites } from "src/suites/suites.entity";
-import { Reservations } from "src/reservations/reservations.entity";
+import { AuthRole } from "./auth.roles.enum";
+
 @Entity()
 @Unique(['email','phone'])
 export class Auth extends BaseEntity{
@@ -22,6 +22,13 @@ export class Auth extends BaseEntity{
 
     @Column()
     salt : string;
+
+    @Column({
+        type : 'enum',
+        enum : AuthRole,
+        default : AuthRole.CLIENT
+    })
+    role : AuthRole;
 
     // @ManyToMany(() => Suites)
     // @JoinTable()

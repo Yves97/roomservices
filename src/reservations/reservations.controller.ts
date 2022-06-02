@@ -18,7 +18,6 @@ export class ReservationsController {
 
     @Post()
     async createReservation(@Body(ValidationPipe) createReservationDto : CreateReservationsDto, @Body('ranking',ReservationSuitesRankingValidationPipe) ranking : SuitesRanking, @GetUser() user: Auth):Promise<Reservations>{
-        // console.log('user=',user)
         return await this.reservationsServices.createReservation(createReservationDto,user,ranking)
     }
 }

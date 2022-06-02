@@ -1,21 +1,34 @@
-import { Body, Controller, Get, NotFoundException, Param, Patch, Post,UseGuards,ValidationPipe, Res } from '@nestjs/common';
+import { Body, 
+    Controller, 
+    Get, 
+    NotFoundException, 
+    Param, 
+    Patch, 
+    Post,
+    UseGuards,
+    ValidationPipe
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { userInfo } from 'os';
-import { Auth } from './auth.entity';
 import { AuthServices } from './auth.services';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdatePasswordDto } from './dto/update-password.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { GetUser } from './get-user.decorator';
+import { AuthRole } from './auth.roles.enum';
+
 
 @Controller('auth')
 export class AuthController {
     constructor(private authServices : AuthServices){}
-
-
     @Post('/register')
-    async createUser(@Body(ValidationPipe) createUserDto : CreateUserDto):Promise<void>{
+    async createUser(@Body(ValidationPipe) createUserDto : CreateUserDto):Promise<{}>{
         const create = await this.authServices.createUser(createUserDto)
+        if(create){
+            create.password = undefined
+            create.salt = undefined
+            return {
+                message : 'Utilisateur enregistré avec success',
+                user : create,
+            }   
+        }
     }
 
     @Get('user/:id')

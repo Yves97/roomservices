@@ -20,6 +20,7 @@ export class ReservationsServices {
 
     async createReservation(createReservationDto : CreateReservationsDto,user : Auth,ranking : SuitesRanking):Promise<Reservations>{
         const reserve = new Reservations()
+       
         reserve.duration = createReservationDto.duration
         reserve.user = user.id
         reserve.suite = createReservationDto.suiteId
