@@ -9,7 +9,9 @@ import { BadRequestException,
     UseInterceptors, 
     ValidationPipe,
     UseGuards,
-    SetMetadata
+    SetMetadata,
+    Delete,
+    Patch
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -30,7 +32,6 @@ export class SuitesController {
 
 
     @Get()
-    
     async getSuites():Promise<Suites[]>{
         const suites = await this.suitesServices.getSuites()
         return suites;
@@ -75,4 +76,41 @@ export class SuitesController {
     async getPhoto(@Param('filepath') image,@Res() res){
         return res.sendFile(image,{root : './files'})
     }
+
+   
+
+    @Patch(':id')
+    @Roles(AuthRole.ADMIN)
+    @UseGuards(AuthGuard(),RolesGuard)
+    @UseInterceptors(FileInterceptor('image',{
+        storage : diskStorage({
+            destination : './files',
+            filename : (req,file,cb) => {
+                const name = file.originalname.split('.')[0]
+                const fileExtension = file.originalname.split('.')[1]
+                const newFileName = name.split(' ').join('_') + '_' + Date.now() + '.' + fileExtension
+    
+                cb(null,newFileName)
+            },
+        }),
+        fileFilter : (req,file,cb) => {
+                if(!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)){
+                    return cb(null,false)
+                }
+                cb(null,true)
+            }
+        }))
+    async updateRoom(@Param('id') id : number, @Body(ValidationPipe) suite : CreateSuitesDto,@Body('ranking',ReservationSuitesRankingValidationPipe) ranking : SuitesRanking, @UploadedFile() image : Express.Multer.File){
+        return await this.suitesServices.updateSuite(id,suite,ranking,image)
+    }
+
+
+    @Delete(':id')
+    @Roles(AuthRole.ADMIN)
+    @UseGuards(AuthGuard(),RolesGuard)
+    async deleteRomm(@Param('id') id : number){
+        return this.suitesServices.deleteSuite(id)
+
+    }
+    
 }

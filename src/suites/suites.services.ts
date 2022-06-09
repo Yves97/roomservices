@@ -39,5 +39,29 @@ export class SuitesServices {
         return create;
     }
 
-    
+    async updateSuite(id:number,suitesDto:CreateSuitesDto,ranking :SuitesRanking,file:any){
+        const suite = await this.suitesRepository.findOne(id)
+        if(!suite){
+            throw new NotFoundException('Chambre introuvable')
+        }
+        const suites = new Suites()
+        suites.name = suitesDto.name
+        suites.description = suitesDto.description
+        suites.price = suitesDto.price
+        suites.ranking = ranking
+        suites.image = file ? file.filename : ''
+        await this.suitesRepository.update({id},suites)
+        return suite
+        
+    }
+
+    async deleteSuite(id : number){
+        const suite = await this.suitesRepository.findOne(id)
+        console.log(suite)
+        if(!suite){
+            throw new NotFoundException('Chambre introuvable')
+        }else{
+            return await this.suitesRepository.delete(id)
+        }
+    }   
 }
