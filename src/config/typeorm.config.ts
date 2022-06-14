@@ -8,5 +8,7 @@ export const typeOrmConfig : TypeOrmModuleOptions = {
     password : '14f2a4f7',
     database : 'heroku_ade000ed014327b',
     entities : [__dirname + '/../**/*.entity{.ts,.js}'],
-    synchronize : true
+    synchronize : true,
+    url: 'mysql://bfd3217237646b:14f2a4f7@us-cdbr-east-05.cleardb.net/heroku_ade000ed014327b?reconnect=true',
+    ssl: { rejectUnauthorized: false }
 }
