@@ -5,6 +5,7 @@ import { ReservationRepository } from './reservations.repository';
 import { AuthModule } from 'src/auth/auth.module';
 import { SuitesModule } from 'src/suites/suites.module';
 import { ReservationsServices } from './reservations.services';
+import { AuthServices } from 'src/auth/auth.services';
 @Module({
   imports : [TypeOrmModule.forFeature([ReservationRepository]),AuthModule,SuitesModule],
   controllers: [ReservationsController],

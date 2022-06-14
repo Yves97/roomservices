@@ -6,7 +6,7 @@ import { AuthServices } from './auth.services';
 import {JwtModule} from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
-import { MailerModule, MailerService } from '@nestjs-modules/mailer';
+import { MailerModule } from '@nestjs-modules/mailer';
 import { MailService } from 'src/mail/mail.service';
 
 @Module({
@@ -15,11 +15,11 @@ import { MailService } from 'src/mail/mail.service';
         JwtModule.register({
             secret : 'roomSecret',
             signOptions : {
-                expiresIn : 3600
+                expiresIn : 10800
             }
         }),
         PassportModule.register({defaultStrategy : 'jwt'}),
-        MailerModule
+        MailerModule,
 ],
     controllers: [AuthController],
     providers : [
@@ -29,7 +29,8 @@ import { MailService } from 'src/mail/mail.service';
     ],
     exports : [
         JwtStrategy,
-        PassportModule
+        PassportModule,
+        AuthServices
     ]
 })
 export class AuthModule {}

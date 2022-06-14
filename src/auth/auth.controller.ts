@@ -34,14 +34,7 @@ export class AuthController {
     @Get('user/:id')
     @UseGuards(AuthGuard())
     async getUser(@Param('id') id : number){
-        const user = await this.authServices.getUser(id)
-        if(!user){
-            throw  new NotFoundException('Utilisateur non trouvable')
-        }else{
-            user.password = undefined
-            user.salt = undefined
-            return user;
-        }
+        return await this.authServices.getUser(id)
     }
 
     @Post('/login')

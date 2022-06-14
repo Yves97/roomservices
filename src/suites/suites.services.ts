@@ -57,7 +57,6 @@ export class SuitesServices {
 
     async deleteSuite(id : number){
         const suite = await this.suitesRepository.findOne(id)
-        console.log(suite)
         if(!suite){
             throw new NotFoundException('Chambre introuvable')
         }else{

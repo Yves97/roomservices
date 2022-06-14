@@ -45,7 +45,14 @@ export class AuthServices {
         }
     }
     async getUser(id :number){
-        return await this.authRepository.findOne(id)
+        const user = await this.authRepository.findOne(id)
+        if(!user){
+            throw new NotFoundException('Utilisateur introuvable')
+        }else{
+            delete user.password   
+            delete user.salt
+            return user;
+        }
     }
 
     private async hashPassword(password:string,salt:string):Promise<string>{

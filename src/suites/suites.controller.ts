@@ -24,8 +24,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthRole } from 'src/auth/auth.roles.enum';
 // import { Roles } from 'src/auth/roles.decorators';
 import { RolesGuard , Roles } from 'src/auth/roles.guards';
-import { GetUser } from 'src/auth/get-user.decorator';
-import { Auth } from 'src/auth/auth.entity';
+
 @Controller('suites')
 export class SuitesController {
     constructor(private suitesServices : SuitesServices){}
@@ -77,8 +76,6 @@ export class SuitesController {
         return res.sendFile(image,{root : './files'})
     }
 
-   
-
     @Patch(':id')
     @Roles(AuthRole.ADMIN)
     @UseGuards(AuthGuard(),RolesGuard)
@@ -110,7 +107,6 @@ export class SuitesController {
     @UseGuards(AuthGuard(),RolesGuard)
     async deleteRomm(@Param('id') id : number){
         return this.suitesServices.deleteSuite(id)
-
     }
     
 }
