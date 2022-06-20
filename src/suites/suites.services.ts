@@ -13,8 +13,16 @@ export class SuitesServices {
         private suitesRepository : SuitesRepository
     ){}
 
-    getSuites():Promise<Suites[]>{
-        return this.suitesRepository.find()
+    async getSuites():Promise<Suites[]>{
+        return await this.suitesRepository.find()
+    }
+
+    async getOpenedSuites():Promise<Suites[]>{
+        const suites = await this.suitesRepository
+                                .createQueryBuilder('suites')
+                                .where('suites.status = :status',{status : 1})
+                                .getMany()
+        return suites
     }
 
     async getSuite(id:number):Promise<Suites>{
@@ -33,6 +41,7 @@ export class SuitesServices {
         suites.price = suitesDto.price
         suites.ranking = ranking
         suites.image = file ? file.filename : ''
+        suites.status = suitesDto.status
 
         const create = this.suitesRepository.create(suites)
         await this.suitesRepository.save(suites)
@@ -52,7 +61,21 @@ export class SuitesServices {
         suites.image = file ? file.filename : ''
         await this.suitesRepository.update({id},suites)
         return suite
-        
+    }
+
+    async updateSuiteStatus(id:number,status:number):Promise<{}>{
+        const suite = await this.suitesRepository.findOne(id)
+        if(!suite){
+            throw new NotFoundException('Chambre introuvable')
+        }
+        // const update = this.suitesRepository
+        //                 .createQueryBuilder('suite')
+        //                 .update(Suites)
+        //                 .set({status})
+        //                 .where("suites.id = :id",{id : suite.id})
+        //                 .execute()
+        const update = await this.suitesRepository.update(id,{status})
+        return update
     }
 
     async deleteSuite(id : number){

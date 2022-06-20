@@ -19,4 +19,8 @@ export class CreateSuitesDto {
     // @IsNotEmpty()
     // @IsString()
     image : string;
+
+    @IsNotEmpty()
+    @IsInt()
+    status : number;
 }

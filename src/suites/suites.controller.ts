@@ -9,7 +9,6 @@ import { BadRequestException,
     UseInterceptors, 
     ValidationPipe,
     UseGuards,
-    SetMetadata,
     Delete,
     Patch
 } from '@nestjs/common';
@@ -29,11 +28,17 @@ import { RolesGuard , Roles } from 'src/auth/roles.guards';
 export class SuitesController {
     constructor(private suitesServices : SuitesServices){}
 
-
-    @Get()
+    @Roles(AuthRole.ADMIN)
+    @UseGuards(AuthGuard(),RolesGuard)
+    @Get('all')
     async getSuites():Promise<Suites[]>{
         const suites = await this.suitesServices.getSuites()
         return suites;
+    }
+
+    @Get()
+    async getOpenedSuite():Promise<Suites[]>{
+        return await this.suitesServices.getOpenedSuites()
     }
 
     @Get(':id')
@@ -107,6 +112,14 @@ export class SuitesController {
     @UseGuards(AuthGuard(),RolesGuard)
     async deleteRomm(@Param('id') id : number){
         return this.suitesServices.deleteSuite(id)
+    }
+
+    @Patch('status/:id')
+    @Roles(AuthRole.ADMIN)
+    @UseGuards(AuthGuard(),RolesGuard)
+    async updateSuiteStatus(@Param('id') id : number,@Body() status : number):Promise<any>{
+        const up = await this.suitesServices.updateSuiteStatus(id,status)
+        return up
     }
     
 }
