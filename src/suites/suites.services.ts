@@ -63,7 +63,7 @@ export class SuitesServices {
         return suite
     }
 
-    async updateSuiteStatus(id:number,status:number):Promise<{}>{
+    async updateSuiteStatus(id:number,status:string):Promise<{}>{
         const suite = await this.suitesRepository.findOne(id)
         if(!suite){
             throw new NotFoundException('Chambre introuvable')

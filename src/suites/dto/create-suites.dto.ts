@@ -21,6 +21,5 @@ export class CreateSuitesDto {
     image : string;
 
     @IsNotEmpty()
-    @IsInt()
-    status : number;
+    status : string;
 }
