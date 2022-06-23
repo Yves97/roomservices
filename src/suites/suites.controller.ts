@@ -52,7 +52,7 @@ export class SuitesController {
    @UseGuards(AuthGuard(), RolesGuard)
    @UseInterceptors(FileInterceptor('image',{
     storage : diskStorage({
-        destination : './files',
+        destination : '/app/files',
         filename : (req,file,cb) => {
             const name = file.originalname.split('.')[0]
             const fileExtension = file.originalname.split('.')[1]
@@ -78,7 +78,7 @@ export class SuitesController {
 
     @Get('pictures/:filepath')
     async getPhoto(@Param('filepath') image,@Res() res){
-        return res.sendFile(image,{root : './files'})
+        return res.sendFile(image,{root : '/app/files'})
     }
 
     @Patch(':id')
@@ -86,7 +86,7 @@ export class SuitesController {
     @UseGuards(AuthGuard(),RolesGuard)
     @UseInterceptors(FileInterceptor('image',{
         storage : diskStorage({
-            destination : './files',
+            destination : '/app/files',
             filename : (req,file,cb) => {
                 const name = file.originalname.split('.')[0]
                 const fileExtension = file.originalname.split('.')[1]
