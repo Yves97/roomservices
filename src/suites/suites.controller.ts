@@ -117,7 +117,7 @@ export class SuitesController {
     @Patch('status/:id')
     @Roles(AuthRole.ADMIN)
     @UseGuards(AuthGuard(),RolesGuard)
-    async updateSuiteStatus(@Param('id') id : number,@Body() status : number):Promise<any>{
+    async updateSuiteStatus(@Param('id') id : number,@Body() status : string):Promise<any>{
         const up = await this.suitesServices.updateSuiteStatus(id,status)
         return up
     }

@@ -12,7 +12,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthServices } from './auth.services';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { AuthRole } from './auth.roles.enum';
+
 
 
 @Controller('auth')

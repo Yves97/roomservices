@@ -25,7 +25,7 @@ export class Suites extends BaseEntity {
     image : string;
 
     @Column()
-    status  : number;
+    status  : string;
 
     // @OneToMany(() => Reservations,(reservations)=> reservations.id)
     // public reservations : Reservations
